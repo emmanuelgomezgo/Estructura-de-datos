@@ -1,0 +1,375 @@
+# ==========================================
+# PLANIFICADOR DE PLAN DE ESTUDIOS
+# UNIDADES 1 Y 2
+# ==========================================
+
+# ==========================================
+# UNIDAD 1 - ARREGLO DE CURSOS
+# ==========================================
+
+cursos = [
+    ["MAT101", "Matemáticas I", 3, 1],
+    ["PRO101", "Programación I", 3, 1],
+    ["ING101", "Inglés I", 2, 1],
+
+    ["MAT102", "Matemáticas II", 3, 2],
+    ["PRO102", "Programación II", 3, 2],
+    ["FIS101", "Física I", 3, 2],
+    ["ING102", "Inglés II", 2, 2],
+
+    ["MAT201", "Matemáticas III", 3, 3],
+    ["BD101", "Bases de Datos", 3, 3],
+
+    ["IS101", "Ingeniería de Software", 3, 4]
+]
+
+
+# ------------------------------------------
+# Mostrar todos los cursos
+# ------------------------------------------
+
+def mostrar_cursos():
+
+    print("\n===== PLAN DE ESTUDIOS =====")
+
+    for curso in cursos:
+
+        codigo = curso[0]
+        nombre = curso[1]
+        creditos = curso[2]
+        semestre = curso[3]
+
+        print(
+            codigo,
+            "-",
+            nombre,
+            "-",
+            creditos,
+            "créditos",
+            "- Semestre",
+            semestre
+        )
+
+
+# ------------------------------------------
+# Ordenar por semestre
+# ------------------------------------------
+
+def ordenar_por_semestre():
+
+    ordenados = sorted(
+        cursos,
+        key=lambda curso: curso[3]
+    )
+
+    print("\n===== CURSOS ORDENADOS POR SEMESTRE =====")
+
+    for curso in ordenados:
+
+        print(
+            "Semestre", curso[3],
+            "-", curso[0],
+            "-", curso[1]
+        )
+
+
+# ------------------------------------------
+# Ordenar por créditos
+# ------------------------------------------
+
+def ordenar_por_creditos():
+
+    ordenados = sorted(
+        cursos,
+        key=lambda curso: curso[2]
+    )
+
+    print("\n===== CURSOS ORDENADOS POR CRÉDITOS =====")
+
+    for curso in ordenados:
+
+        print(
+            curso[0],
+            "-",
+            curso[1],
+            "-",
+            curso[2],
+            "créditos"
+        )
+
+
+# ------------------------------------------
+# MATRIZ SEMESTRE × CURSO
+# ------------------------------------------
+
+def mostrar_matriz():
+
+    print("\n===== MATRIZ SEMESTRE × CURSO =====")
+
+    for semestre in range(1, 5):
+
+        print("\nSEMESTRE", semestre)
+
+        for curso in cursos:
+
+            if curso[3] == semestre:
+
+                print(
+                    "  [",
+                    curso[0],
+                    "]",
+                    curso[1]
+                )
+
+
+# ==========================================
+# UNIDAD 2 - LISTA LIGADA
+# ==========================================
+
+class Nodo:
+
+    def __init__(self, curso):
+
+        self.curso = curso
+        self.siguiente = None
+
+
+class ListaLigada:
+
+    def __init__(self):
+
+        self.inicio = None
+
+    def agregar(self, curso):
+
+        nuevo = Nodo(curso)
+
+        if self.inicio is None:
+
+            self.inicio = nuevo
+
+        else:
+
+            actual = self.inicio
+
+            while actual.siguiente is not None:
+
+                actual = actual.siguiente
+
+            actual.siguiente = nuevo
+
+    def mostrar(self):
+
+        actual = self.inicio
+
+        while actual is not None:
+
+            print(
+                actual.curso[0],
+                "-",
+                actual.curso[1]
+            )
+
+            actual = actual.siguiente
+
+
+# ------------------------------------------
+# Crear una lista por cada semestre
+# ------------------------------------------
+
+def crear_listas():
+
+    listas = {}
+
+    for semestre in range(1, 5):
+
+        lista = ListaLigada()
+
+        for curso in cursos:
+
+            if curso[3] == semestre:
+
+                lista.agregar(curso)
+
+        listas[semestre] = lista
+
+    return listas
+
+
+def mostrar_listas():
+
+    listas = crear_listas()
+
+    print("\n===== LISTAS LIGADAS POR SEMESTRE =====")
+
+    for semestre in listas:
+
+        print("\nSemestre", semestre)
+
+        listas[semestre].mostrar()
+
+
+# ==========================================
+# LISTA DOBLEMENTE LIGADA
+# ==========================================
+
+class NodoDoble:
+
+    def __init__(self, semestre):
+
+        self.semestre = semestre
+        self.anterior = None
+        self.siguiente = None
+
+
+class ListaDoble:
+
+    def __init__(self):
+
+        self.inicio = None
+        self.final = None
+
+    def agregar(self, semestre):
+
+        nuevo = NodoDoble(semestre)
+
+        if self.inicio is None:
+
+            self.inicio = nuevo
+            self.final = nuevo
+
+        else:
+
+            nuevo.anterior = self.final
+
+            self.final.siguiente = nuevo
+
+            self.final = nuevo
+
+
+    # --------------------------------------
+    # Recorrer hacia adelante
+    # --------------------------------------
+
+    def adelante(self):
+
+        actual = self.inicio
+
+        print("\n===== RECORRIDO HACIA ADELANTE =====")
+
+        while actual is not None:
+
+            print(
+                "Semestre",
+                actual.semestre
+            )
+
+            actual = actual.siguiente
+
+
+    # --------------------------------------
+    # Recorrer hacia atrás
+    # --------------------------------------
+
+    def atras(self):
+
+        actual = self.final
+
+        print("\n===== RECORRIDO HACIA ATRÁS =====")
+
+        while actual is not None:
+
+            print(
+                "Semestre",
+                actual.semestre
+            )
+
+            actual = actual.anterior
+
+
+# ==========================================
+# MENÚ
+# ==========================================
+
+def menu():
+
+    lista_doble = ListaDoble()
+
+    for semestre in range(1, 5):
+
+        lista_doble.agregar(semestre)
+
+
+    while True:
+
+        print("\n")
+        print("================================")
+        print("   PLANIFICADOR ACADÉMICO")
+        print("================================")
+        print("1. Mostrar cursos")
+        print("2. Ordenar por semestre")
+        print("3. Ordenar por créditos")
+        print("4. Mostrar matriz")
+        print("5. Mostrar listas ligadas")
+        print("6. Recorrer malla hacia adelante")
+        print("7. Recorrer malla hacia atrás")
+        print("0. Salir")
+        print("================================")
+
+        opcion = input("Seleccione una opción: ")
+
+
+        if opcion == "1":
+
+            mostrar_cursos()
+
+
+        elif opcion == "2":
+
+            ordenar_por_semestre()
+
+
+        elif opcion == "3":
+
+            ordenar_por_creditos()
+
+
+        elif opcion == "4":
+
+            mostrar_matriz()
+
+
+        elif opcion == "5":
+
+            mostrar_listas()
+
+
+        elif opcion == "6":
+
+            lista_doble.adelante()
+
+
+        elif opcion == "7":
+
+            lista_doble.atras()
+
+
+        elif opcion == "0":
+
+            print("\nPrograma finalizado.")
+
+            break
+
+
+        else:
+
+            print("\nOpción inválida.")
+
+
+# ==========================================
+# EJECUTAR
+# ==========================================
+
+if __name__ == "__main__":
+
+    menu()
